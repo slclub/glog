@@ -116,7 +116,8 @@ Set("head", "auth@kawayi\nBbegin a new log every day\n")
 // false: Hide data printed by a Debug method. true: show all
 Set("debug", false)
 // The second param also can be a number. The permission setting here is designed by bit calculation
-// Add and subtract are supported for these numbers
+// Add and subtract are supported for these numbers. You can use addition and subtraction to control permissions
+// Very delicate to control
 Set("debug", int)
 
 const (
