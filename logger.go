@@ -31,10 +31,10 @@ const (
 )
 
 // default level. also is most commonly used.
-var ALL_LEVEL = LEVEL_INFO + LEVEL_DEBUG + LEVEL_WARNNING + LEVEL_ERROR + LEVEL_FATAL + TRACE_WARNNING + TRACE_ERROR + TRACE_FATAL
+var ALL_LEVEL = LEVEL_INFO + LEVEL_DEBUG + LEVEL_WARNNING + LEVEL_ERROR + LEVEL_FATAL + TRACE_ERROR + TRACE_FATAL
 
 // debuging. = 1024 -1
-var ALL_TRACE = ALL_LEVEL + TRACE_INFO + TRACE_DEBUG
+var ALL_TRACE = ALL_LEVEL + TRACE_INFO + TRACE_DEBUG + TRACE_WARNNING
 
 var level_name = map[int]string{
 	LEVEL_INFO:     "INFO ",
@@ -58,6 +58,7 @@ func init() {
 
 	// write now
 	log_mgr.min_write = 1024
+	log_mgr.trace_len = 5024
 	log_mgr.write_now = make(chan byte, 2)
 	log_mgr.tick_time = 10
 	//log_mgr.time_format = "2020-05-19 00:00:00"
@@ -101,8 +102,8 @@ func (m *logManager) levelCheck(level int) bool {
 
 // follow your level check the trace opend.
 func (m *logManager) traceCheck(level int) bool {
-	level = level << 5
-	if level&m.level_security > 0 {
+	lt := level << 5
+	if lt&m.level_security > 0 {
 		return true
 	}
 	return false
@@ -173,9 +174,6 @@ func (m *logManager) output(level int, log []byte) {
 	if !flag.Parsed() {
 		os.Stderr.Write([]byte("ERROR:log before flag.parsed."))
 		os.Stderr.Write(log)
-		if !m.to_both {
-			return
-		}
 	}
 	if m.to_stderr {
 		os.Stderr.Write(log)
@@ -370,7 +368,13 @@ func (l *logging) printTrace() {
 	if !log_mgr.traceCheck(l.level) {
 		return
 	}
-	l.buf.Write(stack(l.level, log_mgr.trace_len))
+	tmp_buf := stack(log_mgr.trace_len)
+	//fmt.Fprint(l.buf, string(tmp_buf))
+	//l.lineBreak()
+	bytes.Trim(tmp_buf, "\x00")
+	l.buf.Write(tmp_buf)
+	//l.buf.WriteString(string(tmp_buf))
+	//fmt.Println("STACK LEVEL CHECK", l.level, log_mgr.level_security, l.buf.Len(), len(tmp_buf))
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -448,6 +452,7 @@ func Set(field string, args ...interface{}) {
 		}
 		log_mgr.SetLogAbs(args[0].(string))
 		log_mgr.SetLogDir(args[1].(string))
+		fmt.Println("path print Set", log_mgr.log_file.fullpath())
 	case "name":
 		log_mgr.SetLogName(args[0].(string))
 	case "tick":
@@ -458,6 +463,8 @@ func Set(field string, args ...interface{}) {
 		}
 	case "head":
 		log_mgr.log_file.head_create = args[0].(string)
+	case "show_time":
+		log_mgr.show_time = args[0].(bool)
 	case "format":
 		log_mgr.time_format = args[0].(string)
 	case "debug":
@@ -526,8 +533,8 @@ var err_trace_syntax = errors.New("[log_syntax][trace_error][not valid trace str
 
 // utils function.
 // invoke runtime stack.
-func stack(level int, size int) []byte {
-	var trace = make([]byte, size)
+func stack(size int) []byte {
+	var trace = make([]byte, 1024, size)
 	runtime.Stack(trace, true)
 	return trace
 }

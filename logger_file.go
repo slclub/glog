@@ -49,7 +49,7 @@ func createFileLog() *filelog {
 	}
 
 	fmt.Println("[LOG][PATH]", fl.fullpath(), "[LOG_NAME]", fl.fullname(zero_time))
-	fl.rotate(time.Now())
+	//fl.rotate(time.Now())
 	return fl
 }
 
@@ -77,6 +77,7 @@ func (fl *filelog) logName(t time.Time) string {
 func (fl *filelog) createLogDir() {
 
 	full_path := fl.fullpath()
+	fmt.Println("path print create log dir:", full_path)
 	if ok, _ := isFileExist(full_path); ok {
 		//fmt.Println("path exist create error:", full_path)
 		return
@@ -212,6 +213,9 @@ func (fl *filelog) checkRotate(nt time.Time) bool {
 		return false
 	}
 	return true
+}
+
+func (fl *filelog) reload() {
 }
 
 // --------------------------------------util function.-----------------------------
