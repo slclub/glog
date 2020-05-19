@@ -4,7 +4,7 @@ golang logger manager
 ### Summary
 
 Log plug-ins that can be customized appropriately. Support concurrent logging.We used the ring queue and sync.Pool .
-We use queue instead of lock write security. Easy to use.  
+and use queue instead of lock(sync.Mutex) write security. Easy to use.  Customized. Log files can be customized by size and date. Both supported.
 
 ### Install
 
@@ -22,6 +22,9 @@ If you don't want set your path, debug, time and so on. It can still be used
 `import "github.com/slclub/glog"`
 
 - API
+
+Like fmt.Pringln
+
 ```go
   glog.Info("[HELLO][WORLD]", "MY FIST START", "PID[", int , "]")
   glog.Debug("[HELLO][WORLD]", "MY FIST START", "PID[", int , "]")
@@ -54,11 +57,25 @@ func main() {
 
 ```
 
+- Log default style. before you customized
+
+```go
+ 2020-05-20 00:20:38 INFO  Oh my god. you are so clever.
+ 2020-05-20 00:20:38 WARN  an waring log!
+ 2020-05-20 00:20:38 DEBUG testing something.
+ 2020-05-20 00:20:38 INFO  Oh my god. you are so clever.
+ 2020-05-20 00:20:38 WARN  an waring log!
+ 2020-05-20 00:20:38 DEBUG testing something.
+ 2020-05-20 00:20:38 INFO  Oh my god. you are so clever.
+```
+
 ### Customized
 
 It's actually a function
 
 `Set(field string, value ...interface{})`
+
+In you code maybe like `glog.Set(xxx, xxx)`
 
 - Log file path setting.
 
