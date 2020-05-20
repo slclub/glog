@@ -173,7 +173,7 @@ func (m *logManager) output(level int, log []byte) {
 
 	if !flag.Parsed() {
 		os.Stderr.Write([]byte("ERROR:log before flag.parsed."))
-		os.Stderr.Write(log)
+		//os.Stderr.Write(log)
 	}
 	if m.to_stderr {
 		os.Stderr.Write(log)
@@ -295,7 +295,7 @@ func (l *logging) Reset() {
 
 func (l *logging) header(depth int) (*bytes.Buffer, string, int) {
 	_, file, line, ok := runtime.Caller(3 + depth)
-	if ok {
+	if !ok {
 		file = "???"
 		line = -1
 		return l.formatHeader(file, line), file, line
@@ -479,6 +479,10 @@ func Set(field string, args ...interface{}) {
 
 		if level, ok := args[0].(int); ok {
 			log_mgr.level_security = level
+		}
+	case "stderr":
+		if check, ok := args[0].(bool); ok {
+			log_mgr.to_stderr = check
 		}
 	}
 }

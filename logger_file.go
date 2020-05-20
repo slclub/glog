@@ -184,11 +184,11 @@ func (fl *filelog) rotate(t time.Time) (err error) {
 		fl.Flush()
 		fl.file.Close()
 	}
-	fl.movefile()
 	if ok, _ := isFileExist(fl.fullname(zero_time)); ok {
 		fl.file, err = os.Open(fl.fullname(zero_time))
 		return nil
 	}
+	fl.movefile()
 	fl.file, _, err = fl.create_file(zero_time)
 	if err != nil {
 		return err
