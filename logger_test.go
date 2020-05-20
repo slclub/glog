@@ -31,7 +31,7 @@ func TestLogger(t *testing.T) {
 	}
 
 	go concurrencyLog(vt)
-	//go concurrencyLog(vt)
+	go concurrencyLog(vt)
 	time.Sleep(36000 * time.Second)
 }
 
@@ -43,7 +43,7 @@ func concurrencyLog(send_time int) {
 		Debug("testing something.")
 		Info("Oh my god. you are so clever.")
 		Warnning("这是要追加在末尾的话 log!")
-		//Error("================an Error log!")
+		Error("================an Error log!")
 	}
 	elaps := time.Since(t1)
 	fmt.Println("[PRINT][FINISH][SEND_TIME]", elaps)

@@ -9,6 +9,7 @@ import (
 	"github.com/slclub/goqueue"
 	"os"
 	"runtime"
+	"runtime/debug"
 	"strconv"
 	"strings"
 	"sync"
@@ -538,7 +539,8 @@ var err_trace_syntax = errors.New("[log_syntax][trace_error][not valid trace str
 // utils function.
 // invoke runtime stack.
 func stack(size int) []byte {
-	var trace = make([]byte, 1024, size)
-	runtime.Stack(trace, true)
-	return trace
+	//var trace = make([]byte, 1024, size)
+	//runtime.Stack(trace, true)
+	trace := debug.Stack()
+	return trace[600:]
 }
