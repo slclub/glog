@@ -141,8 +141,6 @@ func (fl *filelog) Sync() {
 
 // write data to file
 func (fl *filelog) Write(p []byte) (size int, err error) {
-	//testcode
-	//fmt.Println(" file.Write size:", len(p))
 
 	size = len(p)
 	if size == 0 {
@@ -152,6 +150,8 @@ func (fl *filelog) Write(p []byte) (size int, err error) {
 	if err != nil {
 		return 0, err
 	}
+	//testcode
+	//fmt.Println(" file.Write size:", fl.size)
 
 	fl.file.Write(p)
 	fl.size += int64(size)
@@ -183,16 +183,26 @@ func (fl *filelog) rotate(t time.Time) (err error) {
 	if fl.file != nil {
 		fl.Flush()
 		fl.file.Close()
+		fl.movefile()
 	}
-	if ok, _ := isFileExist(fl.fullname(zero_time)); ok {
-		fl.file, err = os.Open(fl.fullname(zero_time))
+	fname := fl.fullname(zero_time)
+	if ok, _ := isFileExist(fname); ok {
+		fl.file, err = os.OpenFile(fname, os.O_WRONLY|os.O_APPEND, 0666)
+		fmt.Println("[OPEN_FILE][OK]", fname, ";", err)
+		if err != nil {
+			fmt.Println("[OPEN_FILE][ERROR]", fname, ";", err)
+			panic("Log file maybe permission deny!")
+		}
+		//
+		fl.reset()
+		fl.t = time.Now()
 		return nil
 	}
-	fl.movefile()
 	fl.file, _, err = fl.create_file(zero_time)
 	if err != nil {
 		return err
 	}
+	//
 	fl.reset()
 	fl.t = time.Now()
 

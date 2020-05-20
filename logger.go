@@ -9,7 +9,7 @@ import (
 	"github.com/slclub/goqueue"
 	"os"
 	"runtime"
-	//"strconv"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -294,7 +294,7 @@ func (l *logging) Reset() {
 }
 
 func (l *logging) header(depth int) (*bytes.Buffer, string, int) {
-	_, file, line, ok := runtime.Caller(3 + depth)
+	_, file, line, ok := runtime.Caller(5 + depth)
 	if !ok {
 		file = "???"
 		line = -1
@@ -325,7 +325,7 @@ func (l *logging) formatHeader(file string, line int) *bytes.Buffer {
 	if log_mgr.traceCheck(l.level) {
 		l.buf.WriteString(file)
 		l.buf.WriteString(":")
-		l.buf.WriteRune(rune(line))
+		l.buf.WriteString(strconv.Itoa(line))
 		l.buf.WriteString(" ")
 	}
 

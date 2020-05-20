@@ -12,7 +12,7 @@ func TestLogger(t *testing.T) {
 	// test Set value function.
 	vt := 1000
 	// log file abs path and relative path. can both set them.
-	Set("path", "", "mylog")
+	Set("path", "/tmp/glog", "mylog")
 	// log file prefix name
 	Set("name", "kawayi")
 	// add format time string to each line of log. false: hidden, true:show
@@ -22,11 +22,11 @@ func TestLogger(t *testing.T) {
 	fmt.Println("DIR LOG -------------------:", log_mgr.log_file.fullpath(), log_mgr.log_file.dir_log)
 
 	// test stack
-	var tmp_buf = stack(10000)
-	fmt.Println(string(tmp_buf))
+	//var tmp_buf = stack(10000)
+	//fmt.Println(string(tmp_buf))
 
 	for i := 0; i < 4; i++ {
-		_, file, line, ok := runtime.Caller(3)
+		_, file, line, ok := runtime.Caller(i)
 		fmt.Println("RUN FILE", file, ":", line, ok)
 	}
 
@@ -42,7 +42,8 @@ func concurrencyLog(send_time int) {
 	for i := 0; i < send_time; i++ {
 		Debug("testing something.")
 		Info("Oh my god. you are so clever.")
-		Warnning("an waring log!")
+		Warnning("这是要追加在末尾的话 log!")
+		//Error("================an Error log!")
 	}
 	elaps := time.Since(t1)
 	fmt.Println("[PRINT][FINISH][SEND_TIME]", elaps)
