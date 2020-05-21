@@ -19,7 +19,9 @@ If you don't want set your path, debug, time and so on. It can still be used
 
 - Import
 
-`import "github.com/slclub/glog"`
+```go
+import "github.com/slclub/glog"
+```
 
 - API
 
@@ -134,4 +136,25 @@ const (
     TRACE_ERROR    = 256 
     TRACE_FATAL    = 512 
 )
+```
+
+### Depth
+
+Wrap glog as you like.
+If you wanna wrap more one layer. you should use InfoDepth, DebugDepth, WarnningDepth, ErrorDepth .. etc.
+
+```go
+- InfoDepth(depth int, args ...interface{})
+- DebugDepth(depth int, args ...interface{})
+- WarnningDepth(depth int, args ...interface{})
+- ErrorDepth(depth int, args ...interface{})
+- FatalDepth(depth int, args ...interface{})
+```
+
+```go
+// @param  depth   int  
+//    You should add as many layers of  as you wraped. this will be used by runtime.Caller(). 
+//    Its function is to print the number of lines of code and file name.
+// @param  args    ...interface{}
+//    You can use it like fmt.Pringln .  Their parameters are the same.
 ```
