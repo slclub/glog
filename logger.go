@@ -258,7 +258,7 @@ func (m *logManager) deamon() {
 }
 
 // create logging.
-func (m *logManager) createLog(level int, method string, args ...interface{}) {
+func (m *logManager) createLog(level int, method string, depth int, args ...interface{}) {
 	log := m.pool_log.Get().(*logging)
 	log.level = level
 
@@ -268,7 +268,7 @@ func (m *logManager) createLog(level int, method string, args ...interface{}) {
 	case "println":
 		log.println(args...)
 	case "printDepth":
-		log.printDepth(args[0].(int), args[1:]...)
+		log.printDepth(depth, args...)
 	}
 	log.Reset()
 	m.pool_log.Put(log)
@@ -381,80 +381,80 @@ func (l *logging) printTrace() {
 // ---------------------------------------------------------------------------------------------------------------
 // info
 func Info(args ...interface{}) {
-	log_mgr.createLog(LEVEL_INFO, "print", args...)
+	log_mgr.createLog(LEVEL_INFO, "print", 0, args...)
 }
 
 func Infoln(args ...interface{}) {
-	log_mgr.createLog(LEVEL_INFO, "println", args...)
+	log_mgr.createLog(LEVEL_INFO, "println", 0, args...)
 }
 
 func Infof(format string, args ...interface{}) {
 	log_mgr.createLogF(LEVEL_INFO, format, args...)
 }
-func InfoDepth(args ...interface{}) {
-	log_mgr.createLog(LEVEL_INFO, "printDepth", args...)
+func InfoDepth(depth int, args ...interface{}) {
+	log_mgr.createLog(LEVEL_INFO, "printDepth", depth, args...)
 }
 
 // debug
 func Debug(args ...interface{}) {
-	log_mgr.createLog(LEVEL_DEBUG, "print", args...)
+	log_mgr.createLog(LEVEL_DEBUG, "print", 0, args...)
 }
 
 func Debugln(args ...interface{}) {
-	log_mgr.createLog(LEVEL_DEBUG, "println", args...)
+	log_mgr.createLog(LEVEL_DEBUG, "println", 0, args...)
 }
 
 func Debugf(format string, args ...interface{}) {
 	log_mgr.createLogF(LEVEL_DEBUG, format, args...)
 }
-func DebugDepth(args ...interface{}) {
-	log_mgr.createLog(LEVEL_DEBUG, "printDepth", args...)
+func DebugDepth(depth int, args ...interface{}) {
+	log_mgr.createLog(LEVEL_DEBUG, "printDepth", depth, args...)
 }
 
 // warn
 func Warnning(args ...interface{}) {
-	log_mgr.createLog(LEVEL_WARNNING, "print", args...)
+	log_mgr.createLog(LEVEL_WARNNING, "print", 0, args...)
 }
 func Warnningln(args ...interface{}) {
-	log_mgr.createLog(LEVEL_WARNNING, "println", args...)
+	log_mgr.createLog(LEVEL_WARNNING, "println", 0, args...)
 }
 func Warnningf(format string, args ...interface{}) {
 	log_mgr.createLogF(LEVEL_WARNNING, format, args...)
 }
-func WarnningDepth(args ...interface{}) {
-	log_mgr.createLog(LEVEL_WARNNING, "printDepth", args...)
+func WarnningDepth(depth int, args ...interface{}) {
+	log_mgr.createLog(LEVEL_WARNNING, "printDepth", depth, args...)
 }
 
 //error
 func Error(args ...interface{}) {
-	log_mgr.createLog(LEVEL_ERROR, "print", args...)
+	log_mgr.createLog(LEVEL_ERROR, "print", 0, args...)
 }
 
 func Errorln(args ...interface{}) {
-	log_mgr.createLog(LEVEL_ERROR, "println", args...)
+	log_mgr.createLog(LEVEL_ERROR, "println", 0, args...)
 }
 
 func Errorf(format string, args ...interface{}) {
 	log_mgr.createLogF(LEVEL_ERROR, format, args...)
 }
-func ErrorDepth(args ...interface{}) {
-	log_mgr.createLog(LEVEL_ERROR, "printDepth", args...)
+func ErrorDepth(depth int, args ...interface{}) {
+	log_mgr.createLog(LEVEL_ERROR, "printDepth", depth, args...)
 }
 
 // fatal
 func Fatal(args ...interface{}) {
-	log_mgr.createLog(LEVEL_FATAL, "print", args...)
+	log_mgr.createLog(LEVEL_FATAL, "print", 0, args...)
 }
 
 func Fatalln(args ...interface{}) {
-	log_mgr.createLog(LEVEL_FATAL, "println", args...)
+	log_mgr.createLog(LEVEL_FATAL, "println", 0, args...)
 }
 
 func Fatalf(format string, args ...interface{}) {
 	log_mgr.createLogF(LEVEL_FATAL, format, args...)
 }
-func FatalDepth(args ...interface{}) {
-	log_mgr.createLog(LEVEL_FATAL, "printDepth", args...)
+func FatalDepth(depth int, args ...interface{}) {
+	log_mgr.createLog(LEVEL_FATAL, "printDepth", depth, args...)
 }
 
 // set log manager paramter.
