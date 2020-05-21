@@ -379,6 +379,7 @@ func (l *logging) printTrace() {
 }
 
 // ---------------------------------------------------------------------------------------------------------------
+// info
 func Info(args ...interface{}) {
 	log_mgr.createLog(LEVEL_INFO, "print", args...)
 }
@@ -390,7 +391,11 @@ func Infoln(args ...interface{}) {
 func Infof(format string, args ...interface{}) {
 	log_mgr.createLogF(LEVEL_INFO, format, args...)
 }
+func InfoDepth(args ...interface{}) {
+	log_mgr.createLog(LEVEL_INFO, "printDepth", args...)
+}
 
+// debug
 func Debug(args ...interface{}) {
 	log_mgr.createLog(LEVEL_DEBUG, "print", args...)
 }
@@ -402,7 +407,11 @@ func Debugln(args ...interface{}) {
 func Debugf(format string, args ...interface{}) {
 	log_mgr.createLogF(LEVEL_DEBUG, format, args...)
 }
+func DebugDepth(args ...interface{}) {
+	log_mgr.createLog(LEVEL_DEBUG, "printDepth", args...)
+}
 
+// warn
 func Warnning(args ...interface{}) {
 	log_mgr.createLog(LEVEL_WARNNING, "print", args...)
 }
@@ -412,7 +421,11 @@ func Warnningln(args ...interface{}) {
 func Warnningf(format string, args ...interface{}) {
 	log_mgr.createLogF(LEVEL_WARNNING, format, args...)
 }
+func WarnningDepth(args ...interface{}) {
+	log_mgr.createLog(LEVEL_WARNNING, "printDepth", args...)
+}
 
+//error
 func Error(args ...interface{}) {
 	log_mgr.createLog(LEVEL_ERROR, "print", args...)
 }
@@ -424,7 +437,11 @@ func Errorln(args ...interface{}) {
 func Errorf(format string, args ...interface{}) {
 	log_mgr.createLogF(LEVEL_ERROR, format, args...)
 }
+func ErrorDepth(args ...interface{}) {
+	log_mgr.createLog(LEVEL_ERROR, "printDepth", args...)
+}
 
+// fatal
 func Fatal(args ...interface{}) {
 	log_mgr.createLog(LEVEL_FATAL, "print", args...)
 }
@@ -435,6 +452,9 @@ func Fatalln(args ...interface{}) {
 
 func Fatalf(format string, args ...interface{}) {
 	log_mgr.createLogF(LEVEL_FATAL, format, args...)
+}
+func FatalDepth(args ...interface{}) {
+	log_mgr.createLog(LEVEL_FATAL, "printDepth", args...)
 }
 
 // set log manager paramter.

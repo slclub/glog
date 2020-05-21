@@ -44,6 +44,7 @@ func concurrencyLog(send_time int) {
 		Info("Oh my god. you are so clever.")
 		Warnning("这是要追加在末尾的话 log!")
 		Error("================an Error log!")
+		ErrorDepth(0, "this an user defined depth error log.")
 	}
 	elaps := time.Since(t1)
 	fmt.Println("[PRINT][FINISH][SEND_TIME]", elaps)
