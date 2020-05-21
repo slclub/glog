@@ -28,7 +28,7 @@ Like fmt.Pringln
 ```go
   glog.Info("[HELLO][WORLD]", "MY FIST START", "PID[", int , "]")
   glog.Debug("[HELLO][WORLD]", "MY FIST START", "PID[", int , "]")
-  glog.Warn("[HELLO][WORLD]", "MY FIST START", "PID[", int , "]")
+  glog.Warnning("[HELLO][WORLD]", "MY FIST START", "PID[", int , "]")
   glog.Error("[HELLO][WORLD]", "MY FIST START", "PID[", int , "]")
   glog.Fatal("[HELLO][WORLD]", "MY FIST START", "PID[", int , "]")
 
