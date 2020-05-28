@@ -14,6 +14,10 @@ and use queue instead of lock(sync.Mutex) write security. Easy to use.  Customiz
 
 ### Performance
 
+```go 
+go test -v -run="none" -bench=.
+```
+
 ```go
 Benchmark_test-4   	  272288	      4473 ns/op	     280 B/op	       4 allocs/op
 PASS
