@@ -12,6 +12,15 @@ and use queue instead of lock(sync.Mutex) write security. Easy to use.  Customiz
 
 `go mod`
 
+### Performance
+
+```go
+Benchmark_test-4   	  272288	      4473 ns/op	     280 B/op	       4 allocs/op
+PASS
+ok  	github.com/slclub/glog	1.266s
+
+Writen 14M data into a log file.
+```
 
 ### Let's starts.
 
