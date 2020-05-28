@@ -1,4 +1,14 @@
+github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/slclub/goqueue v0.0.2 h1:8jkyqHXVQXDBj/s5Qq+krN7ZcNQmsvZGE3SOcmaz5bs=
 github.com/slclub/goqueue v0.0.2/go.mod h1:EdU2xbNrM52cC4yDcYpffCOtwKNLvbMpkjUOjx8XoQM=
 github.com/slclub/goqueue v0.0.3 h1:Q3FDjCdZQKzjTzl1IZDKE4rmHs/ENuhMc3TZS9ik+OQ=
 github.com/slclub/goqueue v0.0.3/go.mod h1:EdU2xbNrM52cC4yDcYpffCOtwKNLvbMpkjUOjx8XoQM=
+github.com/slclub/goqueue v0.0.4 h1:2lyYr243RLUYdrcv7KCHmRwfQVjXHt86O61hav/co7A=
+github.com/slclub/goqueue v0.0.4/go.mod h1:5Pm6g6fWEMUZTQvZqUHyKygdV4VEqHO3joxCoDYFj5Q=
+github.com/slclub/utils v0.0.0-20200528131235-19203b312030 h1:Pmxjs7oQVCJZB1xdlv26LisRR6eRM6Zj9+8hhsL94XQ=
+github.com/slclub/utils v0.0.0-20200528131235-19203b312030/go.mod h1:kNRSxpk2+ppQ1gMBvteenzrJVSYZZowdLkSmr1h9GS8=
+github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
+github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5cxcmMvtA=
+gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+gopkg.in/yaml.v2 v2.2.2/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=

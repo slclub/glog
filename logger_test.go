@@ -32,7 +32,7 @@ func TestLogger(t *testing.T) {
 
 	go concurrencyLog(vt)
 	go concurrencyLog(vt)
-	time.Sleep(36000 * time.Second)
+	time.Sleep(10 * time.Second)
 }
 
 // =================================function===============================
