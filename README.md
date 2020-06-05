@@ -1,4 +1,7 @@
 # glog
+[![GoTest](https://github.com/slclub/glog/workflows/Go/badge.svg)](https://github.com/slclub/glog/actions)
+
+
 golang logger manager
 
 ### Summary
