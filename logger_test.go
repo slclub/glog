@@ -35,6 +35,25 @@ func TestLogger(t *testing.T) {
 	time.Sleep(10 * time.Second)
 }
 
+func TestLetterCode(t *testing.T) {
+
+	Set("path", "/tmp/glog", "mylog")
+	Set("name", "kawayi")
+	Set("head", "auth@kawayi\nBbegin a new log every day\n")
+	Warnning("先弄点中文出来 log!")
+	abssend := func() {
+		for i := 0; i < 1000; i++ {
+			Info("Oh my god. you are so clever")
+			//Error("================an Error log!")
+			Warnning("这是要追加在末尾的话 log!")
+			Error("================an Error log!")
+		}
+	}
+	go abssend()
+	go abssend()
+	time.Sleep(10 * time.Second)
+}
+
 // =================================function===============================
 
 func concurrencyLog(send_time int) {
@@ -48,4 +67,17 @@ func concurrencyLog(send_time int) {
 	}
 	elaps := time.Since(t1)
 	fmt.Println("[PRINT][FINISH][SEND_TIME]", elaps)
+
+	Debugf("testing something.")
+	Infof("Oh my god. you are so clever.")
+	Warnningf("这是要追加在末尾的话 log!")
+	Errorf("================an Error log!")
+	Fatalf("================an Error log!")
+
+	Debugln("testing something.")
+	Infoln("Oh my god. you are so clever.")
+	Warnningln("这是要追加在末尾的话 log!")
+	Errorln("================an Error log!")
+	Fatalln("================an Error log!")
+
 }

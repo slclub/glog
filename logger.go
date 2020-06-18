@@ -7,6 +7,7 @@ import (
 	"fmt"
 	//"io"
 	"github.com/slclub/goqueue"
+	"github.com/slclub/utils"
 	"os"
 	"runtime"
 	"runtime/debug"
@@ -340,8 +341,12 @@ func (l *logging) println(args ...interface{}) {
 }
 
 func (l *logging) lineBreak() {
-	if l.buf.Bytes()[l.buf.Len()-1] != '\n' {
-		l.buf.WriteByte('\n')
+	if l.buf.Bytes()[l.buf.Len()-1] != utils.EOL[0] {
+		if utils.IsUnix() {
+			l.buf.WriteByte(utils.EOL[0])
+		} else {
+			l.buf.WriteString("\r\n")
+		}
 	}
 }
 
@@ -479,7 +484,7 @@ func Set(field string, args ...interface{}) {
 	case "tick":
 
 		tick_time, ok := args[0].(time.Duration)
-		if ok {
+		if ok && tick_time > 0 {
 			log_mgr.tick_time = tick_time
 		}
 	case "head":
@@ -511,50 +516,6 @@ func Set(field string, args ...interface{}) {
 // -----------------------------------------------trace location---------------------------------------------------
 // log trace string error
 var err_trace_syntax = errors.New("[log_syntax][trace_error][not valid trace string]")
-
-//
-////
-//type traceLocation struct {
-//	file string
-//	line int
-//}
-//
-//func (t *traceLocation) String() string {
-//	return fmt.Sprintf("%s:%d", t.file, t.line)
-//}
-//
-//func (t *traceLocation) Set(value string) error {
-//	if value == "" {
-//		t.line = 0
-//		t.file = ""
-//		return nil
-//	}
-//
-//	fields := strings.Split(value, ":")
-//	if len(fields) != 2 {
-//		return err_trace_syntax
-//	}
-//
-//	// file, line := fields[0], fields[1]
-//	if !strings.Contains(fields[0], ".") {
-//		return err_trace_syntax
-//	}
-//
-//	v, err := strconv.Atoi(fields[1])
-//	if err != nil {
-//		return err_trace_syntax
-//	}
-//
-//	if v < 0 {
-//		return errors.New(err_trace_syntax.Error() + "line is zero")
-//	}
-//
-//	t.file = fields[0]
-//	t.line = v
-//	return nil
-//}
-
-//
 
 // utils function.
 // invoke runtime stack.

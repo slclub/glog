@@ -48,7 +48,6 @@ func createFileLog() *filelog {
 		head_create: "",
 	}
 
-	fmt.Println("[LOG][PATH]", fl.fullpath(), "[LOG_NAME]", fl.fullname(zero_time))
 	//fl.rotate(time.Now())
 	return fl
 }
@@ -174,11 +173,12 @@ func (fl *filelog) Flush() error {
 
 func (fl *filelog) rotate(t time.Time) (err error) {
 
-	// testcode
-	//fmt.Println("rotate:", fl.fullpath(), fl.fullname(time.Now()))
 	if !fl.checkRotate(t) {
 		return nil
 	}
+	// testcode
+	fmt.Println("[LOG][PATH]", fl.fullpath(), "[LOG_NAME]", fl.fullname(zero_time))
+	//fmt.Println("rotate:", fl.fullpath(), fl.fullname(time.Now()))
 
 	if fl.file != nil {
 		fl.Flush()
