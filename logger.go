@@ -260,6 +260,11 @@ func (m *logManager) deamon() {
 
 // create logging.
 func (m *logManager) createLog(level int, method string, depth int, args ...interface{}) {
+	// 写队列前 检查日志级别
+	if !m.levelCheck(level) {
+		return
+	}
+
 	log := m.pool_log.Get().(*logging)
 	log.level = level
 
@@ -277,6 +282,10 @@ func (m *logManager) createLog(level int, method string, depth int, args ...inte
 
 // create logging.
 func (m *logManager) createLogF(level int, format string, args ...interface{}) {
+	if !m.levelCheck(level) {
+		return
+	}
+
 	log := m.pool_log.Get().(*logging)
 	log.level = level
 

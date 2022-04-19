@@ -15,6 +15,7 @@ func TestLogger(t *testing.T) {
 	Set("path", "/tmp/glog", "mylog")
 	// log file prefix name
 	Set("name", "kawayi")
+	Set("debug", false)
 	// add format time string to each line of log. false: hidden, true:show
 	// Set("show_time", false)
 	// every new log file top content. ofcause it could be empty.
