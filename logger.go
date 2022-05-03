@@ -174,7 +174,7 @@ func (m *logManager) getLog(level int) *filelog {
 func (m *logManager) output(level int, log []byte) {
 
 	if !flag.Parsed() {
-		os.Stderr.Write([]byte("ERROR:log before flag.parsed."))
+		//os.Stderr.Write([]byte("Warn:log before flag.parsed."))
 		//os.Stderr.Write(log)
 	}
 	if m.to_stderr {
