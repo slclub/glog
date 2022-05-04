@@ -5,6 +5,7 @@ import (
 	"runtime"
 	"testing"
 	"time"
+	"sync"
 )
 
 func TestLogger(t *testing.T) {
@@ -31,9 +32,15 @@ func TestLogger(t *testing.T) {
 		fmt.Println("RUN FILE", file, ":", line, ok)
 	}
 
-	go concurrencyLog(vt)
-	go concurrencyLog(vt)
-	time.Sleep(10 * time.Second)
+	fmt.Println("rotate_size:", log_mgr.log_file.rotate_size, "same_date:", log_mgr.log_file.checkRotate(time.Now()), "modify time:", getFileModifyTime(log_mgr.log_file.fullname(zero_time)) )
+	wg := sync.WaitGroup{}
+
+	wg.Add(2)
+	go concurrencyLog(vt, &wg)
+	go concurrencyLog(vt, &wg)
+	wg.Wait()
+	// 为了校验 删除过期日志
+	time.Sleep(time.Second * 5)
 }
 
 func TestLetterCode(t *testing.T) {
@@ -42,6 +49,7 @@ func TestLetterCode(t *testing.T) {
 	Set("name", "kawayi")
 	Set("head", "auth@kawayi\nBbegin a new log every day\n")
 	Warnning("先弄点中文出来 log!")
+	wg := sync.WaitGroup{}
 	abssend := func() {
 		for i := 0; i < 1000; i++ {
 			Info("Oh my god. you are so clever")
@@ -49,15 +57,18 @@ func TestLetterCode(t *testing.T) {
 			Warnning("这是要追加在末尾的话 log!")
 			Error("================an Error log!")
 		}
+		wg.Done()
 	}
+	wg.Add(1)
 	go abssend()
+	wg.Add(1)
 	go abssend()
-	time.Sleep(10 * time.Second)
+	wg.Wait()
 }
 
 // =================================function===============================
 
-func concurrencyLog(send_time int) {
+func concurrencyLog(send_time int, wg *sync.WaitGroup) {
 	t1 := time.Now()
 	for i := 0; i < send_time; i++ {
 		Debug("testing something.")
@@ -80,5 +91,5 @@ func concurrencyLog(send_time int) {
 	Warnningln("这是要追加在末尾的话 log!")
 	Errorln("================an Error log!")
 	Fatalln("================an Error log!")
-
+	wg.Done()
 }

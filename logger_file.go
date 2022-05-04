@@ -12,6 +12,9 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"io/ioutil"
+	//"runtime"
+	//"syscall"
 )
 
 var unit_size = map[string]int{
@@ -34,6 +37,7 @@ type filelog struct {
 	file        *os.File
 	file_id     int
 	head_create string
+	keep_days	int64
 }
 
 func createFileLog() *filelog {
@@ -42,11 +46,14 @@ func createFileLog() *filelog {
 		app_name:    filepath.Base(os.Args[0]),
 		app_path:    path,
 		size:        0,
-		t:           time.Now(),
+		t:           zero_time,
 		file_id:     0,
 		rotate_size: 0,
 		head_create: "",
+		keep_days:	30,  // 默认保留30天; Default keep the logs file alive of tirth days;
 	}
+
+
 
 	//fl.rotate(time.Now())
 	return fl
@@ -177,16 +184,23 @@ func (fl *filelog) rotate(t time.Time) (err error) {
 		return nil
 	}
 	// testcode
-	fmt.Println("[LOG][PATH]", fl.fullpath(), "[LOG_NAME]", fl.fullname(zero_time))
 	//fmt.Println("rotate:", fl.fullpath(), fl.fullname(time.Now()))
+	now_t := time.Now()
+	// When we start project, value of fl.t is zero time
+	if isSameDate(fl.t, zero_time) {
+		fl.t = getFileModifyTime(fl.fullname(zero_time))
+	}
+	//fmt.Println("[ROTATE][LOG][PATH]", fl.fullpath(), "[LOG_NAME]", fl.fullname(zero_time), "[MODIFY]",isSameDate(fl.t, time.Now()))
 
-	if fl.file != nil {
+	if fl.file != nil || !isSameDate(fl.t, now_t ) {
 		fl.Flush()
 		fl.file.Close()
 		fl.movefile()
+		//fmt.Println("[REMOVE][LOG][PATH]", fl.fullpath(), "[LOG_NAME]", fl.fullname(zero_time), "[MODIFY]",isSameDate(fl.t, time.Now()) )
 	}
 	fname := fl.fullname(zero_time)
-	if ok, _ := isFileExist(fname); ok {
+	//fl.t = getFileModifyTime(fl.fullpath())
+	if ok, _ := isFileExist(fname); ok && isSameDate(fl.t, time.Now()) {
 		fl.file, err = os.OpenFile(fname, os.O_WRONLY|os.O_APPEND, 0666)
 		fmt.Println("[OPEN_FILE][OK]", fname, ";", err)
 		if err != nil {
@@ -195,9 +209,9 @@ func (fl *filelog) rotate(t time.Time) (err error) {
 		}
 		//
 		fl.reset()
-		fl.t = time.Now()
 		return nil
 	}
+	// create new log file
 	fl.file, _, err = fl.create_file(zero_time)
 	if err != nil {
 		return err
@@ -207,6 +221,7 @@ func (fl *filelog) rotate(t time.Time) (err error) {
 	fl.t = time.Now()
 
 	fl.file.Write([]byte(fl.head_create))
+	go fl.dynamicDelete(fl.fullpath() )
 	return nil
 }
 
@@ -228,6 +243,21 @@ func (fl *filelog) checkRotate(nt time.Time) bool {
 func (fl *filelog) reload() {
 }
 
+// delete old log files that were expired
+func (fl *filelog) dynamicDelete(readdir string) {
+	rdir , _ := ioutil.ReadDir(readdir)
+	expire_time := time.Now().Unix() - fl.keep_days * 86400
+	for _, fi := range rdir {
+		full_file_name := filepath.Join(fl.fullpath(), fi.Name())
+		if fi.IsDir() {
+			fl.dynamicDelete( full_file_name )
+		}
+		if ok, _ := isFileExist(full_file_name ); ok  && getFileModifyTime( full_file_name ).Unix() < expire_time {
+			os.Remove(full_file_name )
+		}
+	}
+}
+
 // --------------------------------------util function.-----------------------------
 func isFileExist(path string) (bool, error) {
 	fileInfo, err := os.Stat(path)
@@ -243,6 +273,37 @@ func isFileExist(path string) (bool, error) {
 	}
 
 	return false, err
+}
+
+func timespecToTime(ts int64) time.Time {
+	return time.Unix(ts, 0)
+}
+
+func getFileModifyTime(file_path string) time.Time{
+	finfo, err := os.Stat(file_path)
+	if err != nil {
+		fmt.Println("file is not exist:", file_path)
+		return time.Unix(0, 0)
+	}
+	return finfo.ModTime()
+	//sys_type := runtime.GOOS
+	//fmt.Println("os type:", sys_type, finfo)
+	//switch sys_type {
+	//case "windows":
+	//	stat_t := finfo.Sys().(*syscall.Win32FileAttributeData)
+	//	//fmt.Println(timespecToTime(stat_t.LastAccessTime.Nanoseconds()/1e9))
+	//	//fmt.Println(timespecToTime(stat_t.CreationTime.Nanoseconds()/1e9))
+	//	//fmt.Println(timespecToTime(stat_t.LastWriteTime.Nanoseconds()/1e9))
+	//	return timespecToTime(stat_t.CreationTime.Nanoseconds()/1e9)
+	//case "linux":
+	//	stat_t := finfo.Sys().(*syscall.Stat_t)
+	//	//fmt.Println("文件创建时间", SecondToTime(linuxFileAttr.Ctim.Sec))
+	//	//fmt.Println("最后访问时间", SecondToTime(linuxFileAttr.Atim.Sec))
+	//	//fmt.Println("最后修改时间", SecondToTime(linuxFileAttr.Mtim.Sec))
+	//	return timespecToTime(stat_t.Ctim.Sec)
+	//case "darwin": //mac 时间
+	//}
+	//return timespecToTime(0)
 }
 
 func isSameDate(t time.Time, nt time.Time) bool {

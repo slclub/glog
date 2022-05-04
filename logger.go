@@ -502,6 +502,8 @@ func Set(field string, args ...interface{}) {
 		log_mgr.show_time = args[0].(bool)
 	case "format":
 		log_mgr.time_format = args[0].(string)
+	case "rotate" :
+		log_mgr.log_file.setRotateSize(args[0].(string)) // 100K, 100M, 100G
 	case "debug":
 		if check, ok := args[0].(bool); ok {
 			if check {
