@@ -37,7 +37,7 @@ type filelog struct {
 	file        *os.File
 	file_id     int
 	head_create string
-	keep_days	int64
+	keep_days	int64 // 用64位计算时避免类型转换，用空间换时间
 }
 
 func createFileLog() *filelog {
@@ -256,6 +256,13 @@ func (fl *filelog) dynamicDelete(readdir string) {
 			os.Remove(full_file_name )
 		}
 	}
+}
+
+func (fl *filelog) setKeepDays(days uint) {
+	if days == 0 {
+		return
+	}
+	fl.keep_days = int64(days)
 }
 
 // --------------------------------------util function.-----------------------------

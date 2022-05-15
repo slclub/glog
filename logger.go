@@ -30,6 +30,8 @@ const (
 	TRACE_WARNNING = 128
 	TRACE_ERROR    = 256
 	TRACE_FATAL    = 512
+
+	CONST_QUEUE_CAPACITY = 2 * 1024 * 1024
 )
 
 // default level. also is most commonly used.
@@ -55,14 +57,15 @@ func init() {
 		return log_mgr.allocateLog()
 	}
 	ring := goqueue.NewQueue()
-	//ring.Set()
+	ring.Set("capacity", CONST_QUEUE_CAPACITY)
+	ring.Reload()
 	log_mgr.ring = ring
 
 	// write now
-	log_mgr.min_write = 1024
+	log_mgr.min_write = 10 * 1024
 	log_mgr.trace_len = 5024
 	log_mgr.write_now = make(chan byte, 2)
-	log_mgr.tick_time = 10
+	log_mgr.tick_time = 5
 	//log_mgr.time_format = "2020-05-19 00:00:00"
 	log_mgr.time_format = "2006-01-02 15:04:05"
 	log_mgr.buf = new(bytes.Buffer)
@@ -504,6 +507,8 @@ func Set(field string, args ...interface{}) {
 		log_mgr.time_format = args[0].(string)
 	case "rotate" :
 		log_mgr.log_file.setRotateSize(args[0].(string)) // 100K, 100M, 100G
+	case "keep" :
+		log_mgr.log_file.setKeepDays(args[0].(uint))
 	case "debug":
 		if check, ok := args[0].(bool); ok {
 			if check {
@@ -520,6 +525,11 @@ func Set(field string, args ...interface{}) {
 	case "stderr":
 		if check, ok := args[0].(bool); ok {
 			log_mgr.to_stderr = check
+		}
+	case "capacity":
+		if capacity, ok := args[0].(int); ok {
+			log_mgr.ring.Set("capacity", int32(capacity))
+			log_mgr.ring.Reload()
 		}
 	}
 }
