@@ -293,6 +293,7 @@ func (m *logManager) createLogF(level int, format string, args ...interface{}) {
 	log.level = level
 
 	log.printf(format, args...)
+	log.Reset()
 	m.pool_log.Put(log)
 }
 
